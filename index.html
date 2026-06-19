@@ -9,6 +9,45 @@
 
 <style>
 body {
+    <head>
+    <style>
+        body {
+            ...
+        }
+
+        .cyber-card {
+            ...
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="steamProfile" style="
+position: fixed;
+top: 20px;
+right: 20px;
+z-index: 9999;
+display: flex;
+align-items: center;
+gap: 10px;
+background: rgba(20, 10, 35, 0.85);
+border: 1px solid rgba(160,32,240,.5);
+border-radius: 16px;
+padding: 10px 14px;
+color: white;
+font-weight: bold;
+box-shadow: 0 0 20px rgba(160,32,240,.35);
+">
+    <a href="http://localhost:3000/auth/steam"
+       style="color:white;text-decoration:none;">
+       Sign in through Steam
+    </a>
+</div>
+
+<!-- тут весь остальной сайт -->
+
+</body>
     background:
         radial-gradient(circle at top, rgba(138,43,226,0.25), transparent 40%),
         linear-gradient(135deg,#0d0b14,#181326);
@@ -514,6 +553,29 @@ fastUpgradeBtn.addEventListener(
     "click",
     () => spinWheel(400)
 );
+ fetch("http://localhost:3000/api/user", {
+    credentials: "include"
+})
+.then(res => res.json())
+.then(user => {
+    const profile = document.getElementById("steamProfile");
+
+    if (user.loggedIn) {
+        profile.innerHTML = `;
+            <img src="${user.avatar}" style="
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+            ">
+            <span>${user.name}</span>
+            <a href="http://localhost:3000/logout" style="
+                color:#c084fc;
+                text-decoration:none;
+                margin-left:8px;
+            ">Logout</a>
+        `;
+    }
+});   
 </script>
 
 </body>
