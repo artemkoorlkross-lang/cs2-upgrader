@@ -441,51 +441,45 @@ function spinWheel() {
 }
 
 function finishSpin() {
+    const TAU = Math.PI * 2;
 
-    const normalized =
-        (
-            ((Math.PI*2) -
-            (rotation %
-            (Math.PI*2)))
-            + Math.PI/2
-        ) %
-        (Math.PI*2);
+    function normalize(angle) {
+        return ((angle % TAU) + TAU) % TAU;
+    }
 
-    const winArc =
-        (chance/100) *
-        Math.PI*2;
+    // Стрелка находится сверху
+    const pointerAngle = -Math.PI / 2;
 
-    const won =
-        normalized <= winArc;
+    // Угол колеса, который попал под стрелку
+    const angleUnderPointer = normalize(pointerAngle - rotation);
 
-    resultEl.classList.remove(
-        "hidden"
-    );
+    // Победная зона на колесе начинается сверху
+    const winStart = normalize(-Math.PI / 2);
 
-    if(won){
+    // Размер победной зоны
+    const winArc = (chance / 100) * TAU;
 
-        resultEl.textContent =
-            "🎉 WIN";
+    // Расстояние от начала победной зоны до точки под стрелкой
+    const distance = normalize(angleUnderPointer - winStart);
 
+    const won = distance <= winArc;
+
+    resultEl.classList.remove("hidden");
+
+    if (won) {
+        resultEl.textContent = "🎉 WIN";
         resultEl.className =
             "result-popup mt-6 text-3xl font-black text-green-400";
-
         playWinSound();
-
     } else {
-
-        resultEl.textContent =
-            "❌ LOSS";
-
+        resultEl.textContent = "❌ LOSS";
         resultEl.className =
             "result-popup mt-6 text-3xl font-black text-red-400";
-
         playLoseSound();
     }
 
     upgradeBtn.disabled = false;
 }
-
 
 document.querySelectorAll('.chancePreset').forEach((btn,i)=>{
  const vals=[25,50,75];
