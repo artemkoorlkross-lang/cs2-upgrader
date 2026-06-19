@@ -89,7 +89,7 @@ body {
             </h2>
 
             <img
-               src="ak47.png.png"
+                src=src="ak47.png.png"
                 class="rounded-xl w-full h-48 object-cover"
             >
 
@@ -169,7 +169,7 @@ body {
             </h2>
 
             <img
-              src="awp.png.png"
+            src="awp.png.png"
                 class="rounded-xl w-full h-48 object-cover"
             >
 
@@ -441,45 +441,47 @@ function spinWheel() {
 }
 
 function finishSpin() {
-    const TAU = Math.PI * 2;
 
-    // Угол стрелки сверху
-    const pointerAngle = -Math.PI / 2;
-
-    // Какой участок колеса оказался под стрелкой
-    const angleAtPointer =
-        ((pointerAngle - rotation) % TAU + TAU) % TAU;
-
-    // Победный сектор начинается сверху
-    const winStart =
-        ((-Math.PI / 2) % TAU + TAU) % TAU;
+    const normalized =
+        (
+            ((Math.PI*2) -
+            (rotation %
+            (Math.PI*2)))
+            + Math.PI/2
+        ) %
+        (Math.PI*2);
 
     const winArc =
-        (chance / 100) * TAU;
-
-    // Насколько далеко точка под стрелкой от начала победного сектора
-    const distanceFromWinStart =
-        (angleAtPointer - winStart + TAU) % TAU;
+        (chance/100) *
+        Math.PI*2;
 
     const won =
-        distanceFromWinStart <= winArc;
+        normalized <= winArc;
 
-    resultEl.classList.remove("hidden");
+    resultEl.classList.remove(
+        "hidden"
+    );
 
-    if (won) {
-        resultEl.textContent = "🎉 WIN";
+    if(won){
+
+        resultEl.textContent =
+            "🎉 WIN";
+
         resultEl.className =
             "result-popup mt-6 text-3xl font-black text-green-400";
+
         playWinSound();
+
     } else {
-        resultEl.textContent = "❌ LOSS";
+
+        resultEl.textContent =
+            "❌ LOSS";
+
         resultEl.className =
             "result-popup mt-6 text-3xl font-black text-red-400";
+
         playLoseSound();
     }
-
-    upgradeBtn.disabled = false;
-}
 
     upgradeBtn.disabled = false;
 }
