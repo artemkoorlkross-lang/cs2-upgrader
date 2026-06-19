@@ -496,27 +496,11 @@ document.querySelectorAll('.multiplierPreset').forEach((btn,i)=>{
    calculateChance();
  };
 });
-const fastUpgradeBtn =
-document.getElementById("fastUpgradeBtn");
 
-fastUpgradeBtn.addEventListener(
-    "click",
-    () => {
-        const oldDuration = window.spinDuration || 4500;
-        window.spinDuration = 300;
-
-        spinWheel();
-
-        setTimeout(() => {
-            window.spinDuration = oldDuration;
-        }, 100);
-    }
-);
 upgradeBtn.addEventListener(
     "click",
     spinWheel
-);const duration = 300
-window.spinDuration || 4500;
+);
 </script>
 
 </body>
