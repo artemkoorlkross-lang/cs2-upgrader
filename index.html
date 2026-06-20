@@ -37,6 +37,31 @@ body {
 <div id="steamProfile"><a href="/auth/steam">Sign in through Steam</a></div>
 
 <div class="max-w-7xl mx-auto p-6">
+    <div class="grid grid-cols-2 gap-4 mb-6">
+    
+    <div class="cyber-card rounded-3xl p-4">
+        <h3 class="text-purple-300 font-bold">
+            Inventory Value
+        </h3>
+
+        <div id="inventoryValue"
+             class="text-3xl font-black mt-2">
+            $0
+        </div>
+    </div>
+
+    <div class="cyber-card rounded-3xl p-4">
+        <h3 class="text-purple-300 font-bold">
+            Biggest Win
+        </h3>
+
+        <div id="biggestWin"
+             class="text-xl font-black mt-2">
+            None
+        </div>
+    </div>
+
+</div>
     <div class="text-center mb-10">
         <h1 class="text-5xl font-black tracking-wider">CS2 <span class="text-purple-400">UPGRADER</span></h1>
         <p class="text-gray-400 mt-2">Upgrade your skins with a chance-based wheel.</p>
@@ -153,7 +178,10 @@ let targetSkin = allSkins[1];
 let rotation = 0;
 let chance = 50;
 let previousSegment = -1;
-
+let biggestWin = {
+    name: "None",
+    price: 0
+};
 function cloneSkin(skin) {
     return { ...skin, uid: crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random()) };
 }
@@ -333,6 +361,15 @@ function finishSpin() {
     if (won) {
         const oldName = getSelectedItem().name;
         inventory.splice(selectedInventoryIndex, 1, cloneSkin(targetSkin));
+        if (targetSkin.price > biggestWin.price) {
+    biggestWin = {
+        name: targetSkin.name,
+        price: targetSkin.price
+    };
+
+    document.getElementById("biggestWin").textContent =
+        `${biggestWin.name} ($${biggestWin.price})`;
+}
         resultEl.textContent = `🎉 WIN: ${targetSkin.name}`;
         resultEl.className = "result-popup mt-6 text-2xl font-black text-green-400 text-center";
         playWinSound();
@@ -379,7 +416,24 @@ upgradeBtn.addEventListener("click", () => spinWheel(4500));
 fastUpgradeBtn.addEventListener("click", () => spinWheel(400));
 skinSearch.addEventListener("input", renderMarket);
 document.getElementById("resetInventoryBtn").onclick = () => { inventory = defaultInventory(); selectedInventoryIndex = 0; saveInventory(); renderInventory(); updateMainCards(); };
+function updateStats() {
 
+    let total = 0;
+
+    inventory.forEach(item => {
+        total += item.price;
+    });
+
+    document.getElementById("inventoryValue")
+        .textContent = "$" + total;
+
+    document.getElementById("biggestWin")
+        .textContent =
+        biggestWin.name +
+        " ($" +
+        biggestWin.price +
+        ")";
+}
 fetch("/api/user", { credentials: "include" })
 .then(res => res.json())
 .then(user => {
@@ -393,6 +447,7 @@ fetch("/api/user", { credentials: "include" })
 renderInventory();
 renderMarket();
 updateMainCards();
+updateStats();
 </script>
 </body>
 </html>
